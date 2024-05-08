@@ -3,6 +3,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class User extends CI_Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+        is_login();
+        is_admin();
+    }
 
     public function index()
     {
@@ -10,7 +16,7 @@ class User extends CI_Controller
             'title' => 'User',
             'user' => $this->db->get('user')->result()
         );
-        $this->load->view('admin/pages/user/index', $data);
+        $this->load->view('pages/admin/user/index', $data);
     }
 
     public function create()
@@ -23,7 +29,6 @@ class User extends CI_Controller
             'min_length' => '%s minimal 5 karakter'
         ));
         $this->form_validation->set_rules('pass_conf', 'Konfirmasi password', 'required|matches[password]');
-        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('role', 'role', 'required');
 
         $this->form_validation->set_message('required', '%s tidak boleh kosong');
@@ -32,7 +37,7 @@ class User extends CI_Controller
             $data = array(
                 'title' => 'User'
             );
-            $this->load->view('admin/pages/user/add', $data);
+            $this->load->view('pages/admin/user/add', $data);
         } else {
 
             $upload_data = array();
@@ -62,7 +67,6 @@ class User extends CI_Controller
                 'nama' => htmlspecialchars($this->input->post('nama')),
                 'username' => htmlspecialchars($this->input->post('username')),
                 'password' => password_hash(htmlspecialchars($this->input->post('password')), PASSWORD_DEFAULT),
-                'email' => htmlspecialchars($this->input->post('email')),
                 'role' => htmlspecialchars($this->input->post('role')),
                 'foto' => $foto,
             ];
@@ -84,7 +88,6 @@ class User extends CI_Controller
             'min_length' => '%s minimal 5 karakter'
         ));
         $this->form_validation->set_rules('pass_conf', 'Konfirmasi password', 'matches[password]');
-        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('role', 'Role', 'required');
 
         if ($this->input->post('username') != $user->username) {
@@ -99,7 +102,7 @@ class User extends CI_Controller
                 'user' => $user
             ];
 
-            $this->load->view('admin/pages/user/edit', $data);
+            $this->load->view('pages/admin/user/edit', $data);
         } else {
             $upload_data = array();
 
@@ -143,7 +146,6 @@ class User extends CI_Controller
                 'nama' => htmlspecialchars($this->input->post('nama')),
                 'username' => htmlspecialchars($this->input->post('username')),
                 'password' => $password,
-                'email' => htmlspecialchars($this->input->post('email')),
                 'role' => htmlspecialchars($this->input->post('role')),
                 'foto' => $foto,
             ];

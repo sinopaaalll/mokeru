@@ -3,6 +3,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Petugas extends CI_Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+        is_login();
+        is_admin();
+    }
 
     public function index()
     {
@@ -10,7 +16,7 @@ class Petugas extends CI_Controller
             'title' => 'Petugas',
             'petugas' => $this->db->get('petugas')->result()
         );
-        $this->load->view('admin/pages/petugas/index', $data);
+        $this->load->view('pages/admin/petugas/index', $data);
     }
 
     public function create()
@@ -23,8 +29,7 @@ class Petugas extends CI_Controller
             'min_length' => '%s minimal 5 karakter'
         ));
         $this->form_validation->set_rules('pass_conf', 'Konfirmasi password', 'required|matches[password]');
-        $this->form_validation->set_rules('telp', 'Telepon', 'required');
-        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('bagian', 'Bagian', 'required');
 
         $this->form_validation->set_message('required', '%s tidak boleh kosong');
 
@@ -32,7 +37,7 @@ class Petugas extends CI_Controller
             $data = array(
                 'title' => 'Petugas'
             );
-            $this->load->view('admin/pages/petugas/add', $data);
+            $this->load->view('pages/admin/petugas/add', $data);
         } else {
 
             $upload_data = array();
@@ -62,8 +67,7 @@ class Petugas extends CI_Controller
                 'nama' => htmlspecialchars($this->input->post('nama')),
                 'nik' => htmlspecialchars($this->input->post('nik')),
                 'password' => password_hash(htmlspecialchars($this->input->post('password')), PASSWORD_DEFAULT),
-                'telp' => htmlspecialchars($this->input->post('telp')),
-                'email' => htmlspecialchars($this->input->post('email')),
+                'bagian' => htmlspecialchars($this->input->post('bagian')),
                 'foto' => $foto,
             ];
 
@@ -84,8 +88,7 @@ class Petugas extends CI_Controller
             'min_length' => '%s minimal 5 karakter'
         ));
         $this->form_validation->set_rules('pass_conf', 'Konfirmasi password', 'matches[password]');
-        $this->form_validation->set_rules('telp', 'Telepon', 'required');
-        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('bagian', 'Bagian', 'required');
 
         if ($this->input->post('nik') != $petugas->nik) {
             $this->form_validation->set_rules('nik', 'NIK', 'is_unique[petugas.nik]', array(
@@ -99,7 +102,7 @@ class Petugas extends CI_Controller
                 'petugas' => $petugas
             ];
 
-            $this->load->view('admin/pages/petugas/edit', $data);
+            $this->load->view('pages/admin/petugas/edit', $data);
         } else {
             $upload_data = array();
 
@@ -143,8 +146,7 @@ class Petugas extends CI_Controller
                 'nama' => htmlspecialchars($this->input->post('nama')),
                 'nik' => htmlspecialchars($this->input->post('nik')),
                 'password' => $password,
-                'telp' => htmlspecialchars($this->input->post('telp')),
-                'email' => htmlspecialchars($this->input->post('email')),
+                'bagian' => htmlspecialchars($this->input->post('bagian')),
                 'foto' => $foto,
             ];
 

@@ -3,6 +3,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Ruangan extends CI_Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+        is_login();
+        is_admin();
+    }
 
     public function index()
     {
@@ -10,7 +16,7 @@ class Ruangan extends CI_Controller
             'title' => 'Ruangan',
             'ruangan' => $this->db->get('ruangan')->result()
         );
-        $this->load->view('admin/pages/ruangan/index', $data);
+        $this->load->view('pages/admin/ruangan/index', $data);
     }
 
     public function create()
@@ -25,10 +31,14 @@ class Ruangan extends CI_Controller
             $data = array(
                 'title' => 'Ruangan'
             );
-            $this->load->view('admin/pages/ruangan/add', $data);
+            $this->load->view('pages/admin/ruangan/add', $data);
         } else {
+            $nama = htmlspecialchars($this->input->post('nama'));
+            $bagian = (stripos($nama, 'gudang') !== false) ? 'gudang' : 'kantor';
+
             $data = [
-                'nama' => htmlspecialchars($this->input->post('nama'))
+                'nama' => $nama,
+                'bagian' => $bagian
             ];
 
             $this->db->insert('ruangan', $data);
@@ -54,10 +64,14 @@ class Ruangan extends CI_Controller
                 'ruangan' => $ruangan
             ];
 
-            $this->load->view('admin/pages/ruangan/edit', $data);
+            $this->load->view('pages/admin/ruangan/edit', $data);
         } else {
+            $nama = htmlspecialchars($this->input->post('nama'));
+            $bagian = (stripos($nama, 'gudang') !== false) ? 'gudang' : 'kantor';
+
             $data = [
-                'nama' => htmlspecialchars($this->input->post('nama'))
+                'nama' => $nama,
+                'bagian' => $bagian
             ];
 
             $this->db->update('ruangan', $data, array('id' => $id));
